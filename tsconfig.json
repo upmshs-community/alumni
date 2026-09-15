@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2018",
     "module": "none",
-    "lib": ["ES2022", "DOM"],
-    "strict": true,
+    "lib": ["DOM", "ES2018"],
+    "strict": false,
+    "rootDir": "src",
     "outDir": "dist",
-    "removeComments": false,
-    "skipLibCheck": true
+    "removeComments": false
   },
-  "include": ["src/app.ts"]
+  "include": ["src/**/*.ts"]
 }
