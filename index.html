@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="UP Manila School of Health Sciences Department of Medicine Alumni Tracking System prototype" />
+  <title>UPM-SHS Medicine AlumniTrack</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">UP</div>
+        <div>
+          <p class="brand-kicker">UP Manila</p>
+          <h1>SHS Medicine</h1>
+          <p class="brand-subtitle">AlumniTrack</p>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="dashboard"><span>⌂</span> Dashboard</button>
+        <button class="nav-item" data-view="alumni"><span>◎</span> Alumni Registry</button>
+        <button class="nav-item" data-view="batches"><span>▦</span> MD Batches</button>
+        <button class="nav-item" data-view="reports"><span>▤</span> Reports</button>
+        <button class="nav-item" data-view="updates"><span>↻</span> Update Requests <span class="pill" id="pendingPill">3</span></button>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>Prototype Mode</strong>
+        <p>Sample records only. Historical entries should be verified before official use.</p>
+      </div>
+
+      <div class="sidebar-footer">
+        <span>Department of Medicine</span>
+        <small>School of Health Sciences</small>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-button" id="menuButton" aria-label="Toggle navigation">☰</button>
+        <div class="topbar-title">
+          <p>UP Manila School of Health Sciences</p>
+          <strong>Department of Medicine Alumni Tracking System</strong>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost-button" id="exportBtn">Export CSV</button>
+          <button class="primary-button" id="addAlumniBtn">+ Add Alumni</button>
+          <div class="avatar" title="Department administrator">DM</div>
+        </div>
+      </header>
+
+      <section class="content">
+        <!-- DASHBOARD -->
+        <div class="view active" id="view-dashboard">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h2>Alumni Outcomes Dashboard</h2>
+              <p class="muted">Track graduates from admission through licensure, postgraduate training, and current practice.</p>
+            </div>
+            <div class="updated-badge">Last updated: <strong id="lastUpdated">—</strong></div>
+          </div>
+
+          <div class="stats-grid" id="statsGrid"></div>
+
+          <div class="dashboard-grid">
+            <article class="panel panel-wide">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Cohort monitoring</p>
+                  <h3>Batch Progress</h3>
+                </div>
+                <select id="batchRangeSelect" aria-label="Batch range">
+                  <option value="all">All sample batches</option>
+                  <option value="recent">Recent sample batches</option>
+                </select>
+              </div>
+              <div class="batch-bars" id="batchBars"></div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Data quality</p>
+                  <h3>Verification Status</h3>
+                </div>
+              </div>
+              <div class="donut-layout">
+                <div class="donut" id="verificationDonut"><span id="verificationPct">0%</span></div>
+                <div class="legend" id="verificationLegend"></div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Workforce</p>
+                  <h3>Current Career Status</h3>
+                </div>
+              </div>
+              <div id="careerList" class="rank-list"></div>
+            </article>
+
+            <article class="panel panel-wide">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Geographic outcomes</p>
+                  <h3>Where Alumni Are Serving</h3>
+                </div>
+                <button class="text-button" data-view-jump="alumni">View registry →</button>
+              </div>
+              <div class="region-grid" id="regionGrid"></div>
+            </article>
+          </div>
+        </div>
+
+        <!-- ALUMNI -->
+        <div class="view" id="view-alumni">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">Registry</p>
+              <h2>Alumni Records</h2>
+              <p class="muted">Search, filter, verify, and maintain alumni outcome records.</p>
+            </div>
+            <button class="primary-button" id="addAlumniBtn2">+ Add Alumni</button>
+          </div>
+
+          <div class="filter-card">
+            <div class="search-wrap">
+              <span>⌕</span>
+              <input id="searchInput" type="search" placeholder="Search name, institution, specialty, province…" />
+            </div>
+            <select id="batchFilter"><option value="all">All batches</option></select>
+            <select id="statusFilter">
+              <option value="all">All verification</option>
+              <option value="Admin-confirmed">Admin-confirmed</option>
+              <option value="Alumni-confirmed">Alumni-confirmed</option>
+              <option value="Needs verification">Needs verification</option>
+            </select>
+            <button class="ghost-button" id="clearFiltersBtn">Clear</button>
+          </div>
+
+          <div class="table-card">
+            <div class="table-summary"><span id="resultCount">0</span> records shown</div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Alumnus / Alumna</th>
+                    <th>MD Batch</th>
+                    <th>Graduated</th>
+                    <th>PLE / License</th>
+                    <th>Current Status</th>
+                    <th>Location</th>
+                    <th>Verification</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="alumniTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- BATCHES -->
+        <div class="view" id="view-batches">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">Cohort tracking</p>
+              <h2>MD Batches</h2>
+              <p class="muted">Compare admitted, completed, graduated, and licensed counts by cohort.</p>
+            </div>
+          </div>
+          <div class="batch-card-grid" id="batchCardGrid"></div>
+        </div>
+
+        <!-- REPORTS -->
+        <div class="view" id="view-reports">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">Analytics</p>
+              <h2>Reports</h2>
+              <p class="muted">A lightweight prototype of recurring alumni and program-outcomes reports.</p>
+            </div>
+            <button class="primary-button" id="downloadReportBtn">Download Summary CSV</button>
+          </div>
+
+          <div class="report-grid" id="reportGrid"></div>
+        </div>
+
+        <!-- UPDATES -->
+        <div class="view" id="view-updates">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">Review queue</p>
+              <h2>Alumni Update Requests</h2>
+              <p class="muted">Updates should be reviewed before replacing official Department records.</p>
+            </div>
+          </div>
+          <div id="updateRequestList" class="request-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="alumniDialog" class="dialog">
+    <form method="dialog" id="alumniForm">
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">Record entry</p>
+          <h3 id="dialogTitle">Add Alumni Record</h3>
+        </div>
+        <button class="icon-button" value="cancel" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" id="editId" />
+      <div class="form-grid">
+        <label class="field field-full">Full name<input required id="fullName" placeholder="e.g., Juan Dela Cruz, MD" /></label>
+        <label class="field">MD batch<input required id="batchNo" type="number" min="1" placeholder="22" /></label>
+        <label class="field">Year graduated<input required id="gradYear" type="number" min="1970" max="2100" placeholder="2024" /></label>
+        <label class="field">PLE status
+          <select id="pleStatus"><option>Passed</option><option>Not recorded</option><option>For verification</option></select>
+        </label>
+        <label class="field">License status
+          <select id="licenseStatus"><option>Licensed</option><option>Not recorded</option><option>For verification</option></select>
+        </label>
+        <label class="field">Current status<input id="careerStatus" placeholder="General Practice / Resident / Specialist" /></label>
+        <label class="field">Specialty<input id="specialty" placeholder="e.g., Family Medicine" /></label>
+        <label class="field">Institution<input id="institution" placeholder="Hospital / RHU / University" /></label>
+        <label class="field">Province / location<input id="location" placeholder="Leyte" /></label>
+        <label class="field">Region<input id="region" placeholder="Eastern Visayas" /></label>
+        <label class="field">Verification
+          <select id="verification"><option>Needs verification</option><option>Alumni-confirmed</option><option>Admin-confirmed</option></select>
+        </label>
+        <label class="field">Rural / underserved service
+          <select id="rural"><option value="true">Yes</option><option value="false">No / not recorded</option></select>
+        </label>
+        <label class="field field-full">Source / notes<textarea id="notes" rows="3" placeholder="e.g., Historical ledger page __; alumni update pending confirmation"></textarea></label>
+      </div>
+      <div class="dialog-actions">
+        <button class="ghost-button" value="cancel">Cancel</button>
+        <button class="primary-button" id="saveAlumniBtn" value="default">Save Record</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="profileDialog" class="dialog profile-dialog">
+    <div id="profileContent"></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="dist/app.js" defer></script>
+</body>
+</html>

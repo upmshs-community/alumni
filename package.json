@@ -1,0 +1,13 @@
+{
+  "name": "upm-shs-medicine-alumni-tracker-static",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static GitHub Pages-ready prototype for the UP Manila School of Health Sciences Department of Medicine Alumni Tracking System.",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}
