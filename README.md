@@ -1,27 +1,27 @@
-# UPM SHS Department of Medicine Alumni Tracking System
+# UPM SHS Department of Medicine Alumni Tracking System — GitHub Pages Fixed Build
 
-This is a plain **HTML + CSS + TypeScript** starter build with a literal `index.html` file, designed for easy deployment on **GitHub Pages**.
+This package is designed to avoid the issue where GitHub Pages shows the HTML but fails to apply the latest CSS/JS.
 
-## Included
-- `index.html` homepage
-- `styles.css` with a UP-inspired maroon / green / gold UI
-- `src/app.ts` source file
-- `dist/app.js` compiled browser file
-- `assets/upm-shs-logo.png`
-- `assets/up-seal.png`
+## Important
+The deployed `index.html` is **self-contained**:
+- CSS is embedded directly in `index.html`
+- JavaScript is embedded directly in `index.html`
+- Both uploaded logos are embedded directly in `index.html`
 
-## Deploy to GitHub Pages
-1. Extract the ZIP.
-2. Upload the **contents** of the folder to a GitHub repository.
-3. Go to **Settings → Pages**.
-4. Under **Source**, choose **Deploy from a branch**.
-5. Choose `main` and `/root`, then save.
+That means GitHub Pages does not need to fetch `styles.css`, `dist/app.js`, or image files for the live page. The separate source files are still included so you can edit them later.
 
-## Rebuild TypeScript
-```bash
-npm install
-npm run build
-```
+## Upload / replace on GitHub
+1. Open the `upmshs-community/alumni` repository.
+2. Replace the existing files with the contents of this ZIP.
+3. Make sure `index.html` is in the repository root.
+4. Commit the upload.
+5. Wait for **Actions → pages build and deployment** to finish successfully.
+6. Open `https://upmshs-community.github.io/alumni/` and hard-refresh once.
 
-## Data notes
-This starter currently encodes recent cohorts based on the uploaded handwritten Department of Medicine notebook, focusing on batches 18 to 22 for the initial static prototype.
+## Editable source files
+- `src/app.ts` — TypeScript source
+- `styles.css` — editable styles
+- `dist/app.js` — compiled JS
+- `assets/` — original image files
+
+For this fixed build, editing those source files will not change the live page until you regenerate/replace the inline content in `index.html`.
