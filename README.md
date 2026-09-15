@@ -25,3 +25,7 @@ That means GitHub Pages does not need to fetch `styles.css`, `dist/app.js`, or i
 - `assets/` — original image files
 
 For this fixed build, editing those source files will not change the live page until you regenerate/replace the inline content in `index.html`.
+
+
+## Logo order
+The header shows the UP seal first, followed by the UPM School of Health Sciences seal. Both use the same displayed dimensions.

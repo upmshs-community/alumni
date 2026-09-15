@@ -51,13 +51,14 @@ button, input, select { font: inherit; }
   flex-shrink: 0;
 }
 .logo {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
   background: rgba(255,255,255,.96);
   border-radius: 50%;
   padding: 6px;
   box-shadow: 0 8px 20px rgba(0,0,0,.15);
 }
-.shs-logo { width: 92px; height: 92px; }
-.up-logo { width: 92px; height: 92px; }
 .brand-copy h1 {
   margin: 0;
   font-family: "Cormorant Garamond", Georgia, serif;
@@ -250,5 +251,5 @@ td strong { color: var(--up-maroon-deep); }
   .chart-row, .batch-row { grid-template-columns: 1fr; }
   .chart-value, .batch-row .batch-meta { text-align: left; }
   .container { width: min(100% - 24px, 1180px); }
-  .shs-logo, .up-logo { width: 74px; height: 74px; }
+  .logo { width: 74px; height: 74px; }
 }
