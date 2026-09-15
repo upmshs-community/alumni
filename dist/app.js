@@ -1,330 +1,360 @@
-"use strict";
-const seedAlumni = [
-    { id: 1, name: "Sample Alumna A, MD", batch: 18, gradYear: 2022, ple: "Passed", license: "Licensed", career: "Family Medicine Resident", specialty: "Family Medicine", institution: "Sample Medical Center", location: "Leyte", region: "Eastern Visayas", verification: "Admin-confirmed", rural: true, notes: "Demonstration record only." },
-    { id: 2, name: "Sample Alumnus B, MD", batch: 19, gradYear: 2023, ple: "Passed", license: "Licensed", career: "General Practitioner", specialty: "General Practice", institution: "Municipal Health Office", location: "Samar", region: "Eastern Visayas", verification: "Alumni-confirmed", rural: true, notes: "Demonstration record only." },
-    { id: 3, name: "Sample Alumna C, MD", batch: 20, gradYear: 2024, ple: "For verification", license: "For verification", career: "Postgraduate Internship / Transition", specialty: "Not recorded", institution: "Not recorded", location: "Metro Manila", region: "NCR", verification: "Needs verification", rural: false, notes: "Demonstration record only." },
-    { id: 4, name: "Sample Alumnus D, MD", batch: 17, gradYear: 2021, ple: "Passed", license: "Licensed", career: "Internal Medicine Resident", specialty: "Internal Medicine", institution: "Regional Medical Center", location: "Cebu", region: "Central Visayas", verification: "Admin-confirmed", rural: false, notes: "Demonstration record only." },
-    { id: 5, name: "Sample Alumna E, MD", batch: 16, gradYear: 2020, ple: "Passed", license: "Licensed", career: "Rural Health Physician", specialty: "Primary Care", institution: "Rural Health Unit", location: "Northern Samar", region: "Eastern Visayas", verification: "Alumni-confirmed", rural: true, notes: "Demonstration record only." },
-    { id: 6, name: "Sample Alumnus F, MD", batch: 15, gradYear: 2019, ple: "Passed", license: "Licensed", career: "Pediatrics Specialist", specialty: "Pediatrics", institution: "Provincial Hospital", location: "Bohol", region: "Central Visayas", verification: "Admin-confirmed", rural: false, notes: "Demonstration record only." },
-    { id: 7, name: "Sample Alumna G, MD", batch: 21, gradYear: 2025, ple: "Passed", license: "Licensed", career: "General Practitioner", specialty: "General Practice", institution: "District Hospital", location: "Southern Leyte", region: "Eastern Visayas", verification: "Needs verification", rural: true, notes: "Demonstration record only." },
-    { id: 8, name: "Sample Alumnus H, MD", batch: 14, gradYear: 2018, ple: "Passed", license: "Licensed", career: "Public Health Physician", specialty: "Public Health", institution: "Local Government Unit", location: "Davao del Norte", region: "Davao Region", verification: "Admin-confirmed", rural: true, notes: "Demonstration record only." }
-];
-const cohorts = [
-    { batch: 14, academicYear: "2014–2018", admitted: 18, completed: 17, graduated: 17, licensed: 16 },
-    { batch: 15, academicYear: "2015–2019", admitted: 20, completed: 19, graduated: 18, licensed: 17 },
-    { batch: 16, academicYear: "2016–2020", admitted: 19, completed: 18, graduated: 18, licensed: 17 },
-    { batch: 17, academicYear: "2017–2021", admitted: 21, completed: 20, graduated: 20, licensed: 19 },
-    { batch: 18, academicYear: "2018–2022", admitted: 20, completed: 19, graduated: 19, licensed: 18 },
-    { batch: 19, academicYear: "2019–2023", admitted: 20, completed: 20, graduated: 19, licensed: 18 },
-    { batch: 20, academicYear: "2020–2024", admitted: 18, completed: 17, graduated: 17, licensed: 13 },
-    { batch: 21, academicYear: "2021–2025", admitted: 19, completed: 18, graduated: 18, licensed: 11 },
-    { batch: 22, academicYear: "2023–2027", admitted: 16, completed: 0, graduated: 0, licensed: 0 }
-];
-let alumni = loadAlumni();
-let requests = [
-    { id: 1, alumnus: "Sample Alumna E, MD", change: "Updated current institution and municipality of practice.", submitted: "Sep 12, 2026" },
-    { id: 2, alumnus: "Sample Alumnus B, MD", change: "Added residency application status and professional email.", submitted: "Sep 13, 2026" },
-    { id: 3, alumnus: "Sample Alumna G, MD", change: "Submitted PLE result for Department verification.", submitted: "Sep 14, 2026" }
-];
-function loadAlumni() {
-    try {
-        const saved = localStorage.getItem("shs-alumni-records");
-        return saved ? JSON.parse(saved) : structuredClone(seedAlumni);
+const batches = [
+    {
+        batch: 18,
+        academicYear: "AY 2017–2018",
+        period: "3rd qtr (Feb–May 2018)",
+        admitted: 20,
+        completed: 20,
+        graduated: 20,
+        encodedRoster: 20,
+        note: "Notebook annotations show 11 of 18 recorded passers in the April 2024 PLE release notes."
+    },
+    {
+        batch: 19,
+        academicYear: "AY 2018–2019",
+        period: "3rd qtr (Mar–May 2019)",
+        admitted: 22,
+        completed: 21,
+        graduated: 21,
+        encodedRoster: 0,
+        note: "Summary counts were encoded from the notebook. Individual roster transcription can be added next."
+    },
+    {
+        batch: 20,
+        academicYear: "AY 2020–2021",
+        period: "1st qtr (Sept 7–Nov 20, 2020)",
+        admitted: 21,
+        completed: null,
+        graduated: null,
+        encodedRoster: 21,
+        note: "Roster names encoded; graduation and licensure columns were still blank in the uploaded source page."
+    },
+    {
+        batch: 21,
+        academicYear: "AY 2021–2022",
+        period: "2nd qtr (Jan 5–Mar 15, 2022)",
+        admitted: 14,
+        completed: null,
+        graduated: null,
+        encodedRoster: 14,
+        note: "Roster names encoded; completion and licensure fields remain open for later updating."
+    },
+    {
+        batch: 22,
+        academicYear: "AY 2023–2024",
+        period: "Q1 (Oct 2–Dec 15, 2023)",
+        admitted: 16,
+        completed: null,
+        graduated: null,
+        encodedRoster: 16,
+        note: "Roster names encoded from the latest notebook page in the uploaded file."
     }
-    catch {
-        return structuredClone(seedAlumni);
-    }
+];
+const batch18Names = [
+    "Avondo, Gleynce Arteche",
+    "Bapon, Crisanto Mabaga",
+    "Basence, Cristine Mae Corpuz",
+    "Colibao, Rosielen Atienza",
+    "Dacaya, Jessa Vee Dizon",
+    "Delantar, Gerlie Igloria",
+    "Dingcong, Merry Ann Lamsis",
+    "Dupingay, Kenneth Dayag",
+    "Finanza, Arlyn Dinagas",
+    "Galbo, Keshe Rose Baja",
+    "Guarino, Michelle Sanchez",
+    "Inocencio, Jener Grapo",
+    "Mina, Hanielyn Suplente",
+    "Omehang, Joemar Guiwon",
+    "Peligro, James Jr. Mejorada",
+    "Panserga, Ma. Dinah Claire Rosales",
+    "Pilinon, Jasmih Kusid",
+    "Recto, Mayshelle Notafte",
+    "Trinidad, Kaye Michelle Perlas",
+    "Yagyog, Faith Angayon"
+];
+const batch20Names = [
+    "Athogan, Sarah Jane Madren",
+    "Akiate, Kelly Mae Gamo",
+    "Bilugon, Ghissette Kimayong",
+    "Bumdalan, Inian Jaya Dumanang",
+    "Cahug, Christine Mabel Barriantos",
+    "Capogian, Wilmary Pajares",
+    "Delos Reyes, Tony Jean Lagos",
+    "Elizan, Gwendarelyn Almarciso",
+    "Flores, Jinky Petros",
+    "Gajo, Marjorie Calitas",
+    "Guida, Arsheil Nanoy",
+    "Habbiling, Hmarydle Rose Bawil",
+    "Hipol, Roinyj Gamo",
+    "Isidro, Ian Quijon",
+    "Juli, Lady Faith Caturnon",
+    "Kimayong, Attens Dinamgan",
+    "Marihay, Carwin Saldana",
+    "Pugong, Aurone Mae Dulman",
+    "Rumord, Edgar Solomon B.",
+    "Tordillo, Chynna Marie",
+    "Umayat, Andry Ross Ducay"
+];
+const batch21Names = [
+    "Abella, Eunice Mides Pi-og",
+    "Baltwang, Krezelle Gay Calpali",
+    "Bisok, Ronzon Karl Acosta",
+    "Bruno, Neah Shane Lampayan",
+    "Camianes, Darlene Ablanido",
+    "Dacayanan, Nova Mirva Balsamo",
+    "Gutierrez, Mark Jocprrey Habal",
+    "Juanich, John Lorenze Gadot",
+    "Kidit, Lestered Ciano",
+    "Padawil, Mary Christy Bacoco",
+    "Pecancillo, James Ornilla",
+    "Rosauro, Jhoslay Anne Nudalo",
+    "Sinsuat, Bai Mizya Harkishayne Vahos",
+    "Nanawan, Christmar Chapson"
+];
+const batch22Names = [
+    "Balasabas, Hynnah Andrea Am-is",
+    "Balu, Eunice Salumbag",
+    "Bangadan, Godfrey Ortega",
+    "Brillantes, Abigail Namora",
+    "Cabinan, Raphna Mae Pumihic",
+    "Caldosa, Cingrudo Failey",
+    "Forgino, Karl Jezh Matiga",
+    "Muntos, Farry Ann Parks",
+    "Novado, Edward Paul Madrono",
+    "Opac, Angel Marie Zarate",
+    "Pacario, Petra Jessica Pajones",
+    "Pugon, Kati Kimmayung",
+    "San Jose, Hanna Mae Daguinotan",
+    "Tan, Kumanc Galbo",
+    "Valmos, Elbel Civilian",
+    "Uy, Judy Ann Lago"
+];
+function buildPeople() {
+    let id = 1;
+    const people = [];
+    const pushBatch = (names, batch, academicYear, graduation, stage, remarks) => {
+        names.forEach((name) => {
+            people.push({ id: id++, name, batch, academicYear, graduation, stage, remarks });
+        });
+    };
+    pushBatch(batch18Names, 18, "AY 2017–2018", "Aug 11, 2023", "Graduated", "Graduation date recorded in the uploaded notebook.");
+    pushBatch(batch20Names, 20, "AY 2020–2021", "—", "Active Cohort", "Roster encoded; graduation column blank in the source page.");
+    pushBatch(batch21Names, 21, "AY 2021–2022", "—", "Active Cohort", "Roster encoded; completion and licensure updates may be added later.");
+    pushBatch(batch22Names, 22, "AY 2023–2024", "—", "Active Cohort", "Latest batch page encoded from the uploaded notebook.");
+    return people;
 }
-function saveAlumni() {
-    localStorage.setItem("shs-alumni-records", JSON.stringify(alumni));
+const people = buildPeople();
+const stageSummary = [
+    { label: "Graduated (recent summarized batches)", value: 41, className: "fill-graduated" },
+    { label: "Active / ongoing cohorts", value: 51, className: "fill-active" },
+    { label: "Not yet completed / LOA noted", value: 1, className: "fill-graduated" }
+];
+const heroMetrics = [
+    { value: 22, label: "Total notebook batches in the source record" },
+    { value: 5, label: "Recent batches initialized in this starter build" },
+    { value: 71, label: "Detailed roster entries currently encoded" },
+    { value: 93, label: "Recent admitted count across batches 18–22" }
+];
+const statCards = [
+    { label: "Detailed rosters encoded", value: "71", caption: "Batches 18, 20, 21, and 22" },
+    { label: "Recent batch summaries", value: "5", caption: "Batches 18 to 22" },
+    { label: "Graduates recorded", value: "41", caption: "Summarized across batches 18 and 19" },
+    { label: "Ongoing cohort members", value: "51", caption: "Batches 20 to 22" }
+];
+const navButtons = Array.from(document.querySelectorAll(".nav-link"));
+const views = Array.from(document.querySelectorAll(".view"));
+const statsGrid = document.getElementById("statsGrid");
+const heroMetricsEl = document.getElementById("heroMetrics");
+const stageChart = document.getElementById("stageChart");
+const encodedList = document.getElementById("encodedList");
+const batchProgress = document.getElementById("batchProgress");
+const batchCardGrid = document.getElementById("batchCardGrid");
+const registryBody = document.getElementById("registryBody");
+const resultCount = document.getElementById("resultCount");
+const batchFilter = document.getElementById("batchFilter");
+const stageFilter = document.getElementById("stageFilter");
+const searchInput = document.getElementById("searchInput");
+const resetFiltersBtn = document.getElementById("resetFiltersBtn");
+const downloadCsvBtn = document.getElementById("downloadCsvBtn");
+function showView(targetView) {
+    navButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === targetView);
+    });
+    views.forEach((view) => {
+        view.classList.toggle("active", view.id === `view-${targetView}`);
+    });
 }
-function byId(id) {
-    const el = document.getElementById(id);
-    if (!el)
-        throw new Error(`Missing element #${id}`);
-    return el;
-}
-function showToast(message) {
-    const toast = byId("toast");
-    toast.textContent = message;
-    toast.classList.add("show");
-    window.setTimeout(() => toast.classList.remove("show"), 2200);
-}
-function setView(view) {
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    document.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("active", b.dataset.view === view));
-    byId(`view-${view}`).classList.add("active");
-    byId("sidebar").classList.remove("open");
-    window.scrollTo({ top: 0, behavior: "smooth" });
-}
-function pct(numerator, denominator) {
-    return denominator ? Math.round((numerator / denominator) * 100) : 0;
+function renderHeroMetrics() {
+    heroMetricsEl.innerHTML = heroMetrics
+        .map((item) => `
+        <article class="metric-box">
+          <strong>${item.value}</strong>
+          <span>${item.label}</span>
+        </article>
+      `)
+        .join("");
 }
 function renderStats() {
-    const total = alumni.length;
-    const licensed = alumni.filter(a => a.license === "Licensed").length;
-    const rural = alumni.filter(a => a.rural).length;
-    const verified = alumni.filter(a => a.verification !== "Needs verification").length;
-    const stats = [
-        ["Alumni Records", total, "Current prototype dataset", "◎"],
-        ["Licensed Physicians", licensed, `${pct(licensed, total)}% of records`, "✓"],
-        ["Rural / Underserved Service", rural, `${pct(rural, total)}% of records`, "⌖"],
-        ["Verified / Confirmed", verified, `${pct(verified, total)}% of records`, "◉"]
-    ];
-    byId("statsGrid").innerHTML = stats.map(([label, value, foot, icon]) => `
-    <article class="stat-card">
-      <div class="stat-top"><span class="label">${label}</span><span class="stat-icon">${icon}</span></div>
-      <div class="stat-value">${value}</div><div class="stat-foot">${foot}</div>
-    </article>`).join("");
+    statsGrid.innerHTML = statCards
+        .map((item) => `
+        <article class="stat-card">
+          <div class="label">${item.label}</div>
+          <div class="value">${item.value}</div>
+          <div class="caption">${item.caption}</div>
+        </article>
+      `)
+        .join("");
 }
-function renderBatchBars() {
-    const mode = byId("batchRangeSelect").value;
-    const list = mode === "recent" ? cohorts.slice(-5) : cohorts;
-    byId("batchBars").innerHTML = list.map(c => {
-        const completion = pct(c.completed, c.admitted);
-        return `<div class="batch-row">
-      <div class="batch-name">MD ${c.batch}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${completion}%"></div></div>
-      <div class="batch-metrics"><span>Admitted <b>${c.admitted}</b></span><span>Completed <b>${c.completed}</b></span><span>Licensed <b>${c.licensed}</b></span></div>
-    </div>`;
-    }).join("");
+function renderStageChart() {
+    const maxValue = Math.max(...stageSummary.map((item) => item.value));
+    stageChart.innerHTML = stageSummary
+        .map((item) => `
+        <div class="chart-row">
+          <div class="chart-label">${item.label}</div>
+          <div class="chart-track"><div class="chart-fill ${item.className}" style="width:${(item.value / maxValue) * 100}%"></div></div>
+          <div class="chart-value">${item.value}</div>
+        </div>
+      `)
+        .join("");
 }
-function renderVerification() {
-    const counts = {
-        "Admin-confirmed": alumni.filter(a => a.verification === "Admin-confirmed").length,
-        "Alumni-confirmed": alumni.filter(a => a.verification === "Alumni-confirmed").length,
-        "Needs verification": alumni.filter(a => a.verification === "Needs verification").length
-    };
-    const confirmed = counts["Admin-confirmed"] + counts["Alumni-confirmed"];
-    const percent = pct(confirmed, alumni.length);
-    byId("verificationPct").textContent = `${percent}%`;
-    byId("verificationDonut").style.background = `conic-gradient(var(--green) 0deg ${percent * 3.6}deg, #e8ebee ${percent * 3.6}deg 360deg)`;
-    byId("verificationLegend").innerHTML = Object.entries(counts).map(([label, value]) => `<div class="legend-item"><span>${label}</span><strong>${value}</strong></div>`).join("");
+function renderEncodedList() {
+    encodedList.innerHTML = batches
+        .map((batch) => `
+        <div class="list-row">
+          <div>
+            <strong>MD ${batch.batch}th Batch</strong><br />
+            <span>${batch.academicYear}</span>
+          </div>
+          <span>${batch.encodedRoster > 0 ? `${batch.encodedRoster} roster rows encoded` : "summary only"}</span>
+        </div>
+      `)
+        .join("");
 }
-function renderCareer() {
-    const groups = alumni.reduce((acc, a) => { acc[a.career] = (acc[a.career] || 0) + 1; return acc; }, {});
-    const rows = Object.entries(groups).sort((a, b) => b[1] - a[1]).slice(0, 6);
-    const max = Math.max(...rows.map(r => r[1]), 1);
-    byId("careerList").innerHTML = rows.map(([label, value]) => `<div class="rank-row"><span class="rank-label">${label}</span><strong>${value}</strong><div class="rank-bar"><i style="width:${value / max * 100}%"></i></div></div>`).join("");
-}
-function renderRegions() {
-    const groups = alumni.reduce((acc, a) => { acc[a.region] = (acc[a.region] || 0) + 1; return acc; }, {});
-    byId("regionGrid").innerHTML = Object.entries(groups).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([region, value]) => `<div class="region-card"><strong>${value}</strong><span>${region}</span></div>`).join("");
-}
-function verificationClass(s) {
-    return s === "Admin-confirmed" ? "verified" : s === "Alumni-confirmed" ? "alumni" : "needs";
-}
-function renderAlumniTable() {
-    const q = byId("searchInput").value.toLowerCase().trim();
-    const batch = byId("batchFilter").value;
-    const status = byId("statusFilter").value;
-    const filtered = alumni.filter(a => {
-        const haystack = `${a.name} ${a.institution} ${a.specialty} ${a.location} ${a.region} ${a.career}`.toLowerCase();
-        return (!q || haystack.includes(q)) && (batch === "all" || String(a.batch) === batch) && (status === "all" || a.verification === status);
-    });
-    byId("resultCount").textContent = String(filtered.length);
-    const body = byId("alumniTableBody");
-    if (!filtered.length) {
-        body.innerHTML = `<tr><td colspan="8" class="empty-state">No matching alumni records.</td></tr>`;
-        return;
-    }
-    body.innerHTML = filtered.sort((a, b) => b.batch - a.batch || a.name.localeCompare(b.name)).map(a => `<tr>
-    <td class="name-cell"><strong>${a.name}</strong><small>${a.specialty}</small></td>
-    <td>MD ${a.batch}</td><td>${a.gradYear}</td><td>${a.ple}<br><small>${a.license}</small></td>
-    <td>${a.career}<br><small>${a.institution}</small></td><td>${a.location}<br><small>${a.region}</small></td>
-    <td><span class="status-badge ${verificationClass(a.verification)}">${a.verification}</span></td>
-    <td><button class="row-action" data-profile="${a.id}">View</button></td>
-  </tr>`).join("");
-}
-function renderBatchFilter() {
-    const select = byId("batchFilter");
-    const batches = [...new Set(alumni.map(a => a.batch))].sort((a, b) => b - a);
-    select.innerHTML = `<option value="all">All batches</option>` + batches.map(b => `<option value="${b}">MD ${b}</option>`).join("");
+function renderBatchProgress() {
+    const maxAdmitted = Math.max(...batches.map((batch) => batch.admitted));
+    batchProgress.innerHTML = batches
+        .map((batch) => `
+        <div class="batch-row">
+          <div class="batch-name">MD ${batch.batch}</div>
+          <div class="progress-track"><div class="progress-fill" style="width:${(batch.admitted / maxAdmitted) * 100}%"></div></div>
+          <div class="batch-meta">Admitted: <strong>${batch.admitted}</strong></div>
+        </div>
+      `)
+        .join("");
 }
 function renderBatchCards() {
-    byId("batchCardGrid").innerHTML = cohorts.slice().reverse().map(c => {
-        const comp = pct(c.completed, c.admitted);
-        const lic = pct(c.licensed, c.graduated);
-        return `<article class="batch-card"><div class="batch-card-top"><div><p class="eyebrow">Cohort</p><h3>MD ${c.batch}${ordinal(c.batch)} Batch</h3><span class="batch-year">${c.academicYear}</span></div><span class="status-badge needs">Sample</span></div>
-      <div class="batch-stat-grid"><div class="mini-stat"><b>${c.admitted}</b><span>Admitted</span></div><div class="mini-stat"><b>${c.completed}</b><span>Completed</span></div><div class="mini-stat"><b>${c.graduated}</b><span>Graduated</span></div><div class="mini-stat"><b>${c.licensed}</b><span>Licensed</span></div></div>
-      <div class="progress-line"><i style="width:${comp}%"></i></div><div class="batch-card-footer"><span>Completion ${comp}%</span><span>Licensure ${lic}%</span></div>
-    </article>`;
-    }).join("");
+    batchCardGrid.innerHTML = batches
+        .map((batch) => {
+        var _a, _b;
+        return `
+        <article class="batch-card">
+          <h4>MD ${batch.batch}th Batch</h4>
+          <p class="batch-sub">${batch.academicYear} · ${batch.period}</p>
+          <div class="batch-mini-grid">
+            <div class="mini-tile"><strong>${batch.admitted}</strong><span>Admitted</span></div>
+            <div class="mini-tile"><strong>${(_a = batch.completed) !== null && _a !== void 0 ? _a : "—"}</strong><span>Completed</span></div>
+            <div class="mini-tile"><strong>${(_b = batch.graduated) !== null && _b !== void 0 ? _b : "—"}</strong><span>Graduated</span></div>
+            <div class="mini-tile"><strong>${batch.encodedRoster || "—"}</strong><span>Encoded roster rows</span></div>
+          </div>
+          <p class="batch-note">${batch.note}</p>
+        </article>
+      `;
+    })
+        .join("");
 }
-function ordinal(n) {
-    const mod10 = n % 10, mod100 = n % 100;
-    if (mod10 === 1 && mod100 !== 11)
-        return "st";
-    if (mod10 === 2 && mod100 !== 12)
-        return "nd";
-    if (mod10 === 3 && mod100 !== 13)
-        return "rd";
-    return "th";
+function populateBatchFilter() {
+    batches
+        .filter((batch) => batch.encodedRoster > 0)
+        .forEach((batch) => {
+        const option = document.createElement("option");
+        option.value = String(batch.batch);
+        option.textContent = `MD ${batch.batch}th Batch`;
+        batchFilter.appendChild(option);
+    });
 }
-function renderReports() {
-    const licensed = alumni.filter(a => a.license === "Licensed").length;
-    const rural = alumni.filter(a => a.rural).length;
-    const verified = alumni.filter(a => a.verification !== "Needs verification").length;
-    const regions = new Set(alumni.map(a => a.region)).size;
-    const reports = [
-        ["Licensure Outcomes", "✓", `${pct(licensed, alumni.length)}%`, "Share of prototype records marked licensed."],
-        ["Rural Service", "⌖", `${pct(rural, alumni.length)}%`, "Share with rural or underserved service recorded."],
-        ["Data Verification", "◉", `${pct(verified, alumni.length)}%`, "Share confirmed by alumni or Department admin."],
-        ["Geographic Reach", "▦", `${regions}`, "Regions represented in the current prototype dataset."],
-        ["Active Update Requests", "↻", `${requests.length}`, "Alumni-submitted changes awaiting review."],
-        ["Cohorts in Tracker", "◎", `${cohorts.length}`, "Sample cohort cards currently configured."]
-    ];
-    byId("reportGrid").innerHTML = reports.map(([title, icon, value, desc]) => `<article class="report-card"><div class="report-icon">${icon}</div><h3>${title}</h3><p>${desc}</p><div class="report-value">${value}</div></article>`).join("");
+function getFilteredPeople() {
+    const query = searchInput.value.trim().toLowerCase();
+    return people.filter((person) => {
+        const matchesQuery = !query ||
+            person.name.toLowerCase().includes(query) ||
+            `md ${person.batch}`.toLowerCase().includes(query);
+        const matchesBatch = batchFilter.value === "all" || String(person.batch) === batchFilter.value;
+        const matchesStage = stageFilter.value === "all" || person.stage === stageFilter.value;
+        return matchesQuery && matchesBatch && matchesStage;
+    });
 }
-function renderRequests() {
-    byId("pendingPill").textContent = String(requests.length);
-    const list = byId("updateRequestList");
-    if (!requests.length) {
-        list.innerHTML = `<div class="panel empty-state">No pending update requests.</div>`;
-        return;
-    }
-    list.innerHTML = requests.map(r => `<article class="request-card"><div><h3>${r.alumnus}</h3><p>${r.change}<br><small>Submitted ${r.submitted}</small></p></div><div class="request-actions"><button class="ghost-button" data-reject="${r.id}">Reject</button><button class="primary-button" data-approve="${r.id}">Approve</button></div></article>`).join("");
+function renderRegistry() {
+    const filtered = getFilteredPeople();
+    resultCount.textContent = String(filtered.length);
+    registryBody.innerHTML = filtered
+        .map((person) => `
+        <tr>
+          <td><strong>${person.name}</strong></td>
+          <td>MD ${person.batch}th Batch</td>
+          <td>${person.academicYear}</td>
+          <td>${person.graduation}</td>
+          <td>
+            <span class="stage-badge ${person.stage === "Graduated" ? "graduated" : "active"}">${person.stage}</span>
+          </td>
+          <td>${person.remarks}</td>
+        </tr>
+      `)
+        .join("");
 }
-function renderAll() {
-    renderStats();
-    renderBatchBars();
-    renderVerification();
-    renderCareer();
-    renderRegions();
-    renderBatchFilter();
-    renderAlumniTable();
-    renderBatchCards();
-    renderReports();
-    renderRequests();
-    byId("lastUpdated").textContent = new Date().toLocaleDateString("en-PH", { year: "numeric", month: "short", day: "numeric" });
-}
-function openAlumniDialog(record) {
-    const dialog = byId("alumniDialog");
-    byId("dialogTitle").textContent = record ? "Edit Alumni Record" : "Add Alumni Record";
-    byId("editId").value = record ? String(record.id) : "";
-    byId("fullName").value = record?.name || "";
-    byId("batchNo").value = record ? String(record.batch) : "";
-    byId("gradYear").value = record ? String(record.gradYear) : "";
-    byId("pleStatus").value = record?.ple || "Passed";
-    byId("licenseStatus").value = record?.license || "Licensed";
-    byId("careerStatus").value = record?.career || "";
-    byId("specialty").value = record?.specialty || "";
-    byId("institution").value = record?.institution || "";
-    byId("location").value = record?.location || "";
-    byId("region").value = record?.region || "";
-    byId("verification").value = record?.verification || "Needs verification";
-    byId("rural").value = record?.rural ? "true" : "false";
-    byId("notes").value = record?.notes || "";
-    dialog.showModal();
-}
-function saveForm(event) {
-    event.preventDefault();
-    const editId = Number(byId("editId").value || 0);
-    const item = {
-        id: editId || Math.max(0, ...alumni.map(a => a.id)) + 1,
-        name: byId("fullName").value.trim(),
-        batch: Number(byId("batchNo").value),
-        gradYear: Number(byId("gradYear").value),
-        ple: byId("pleStatus").value,
-        license: byId("licenseStatus").value,
-        career: byId("careerStatus").value.trim() || "Not recorded",
-        specialty: byId("specialty").value.trim() || "Not recorded",
-        institution: byId("institution").value.trim() || "Not recorded",
-        location: byId("location").value.trim() || "Not recorded",
-        region: byId("region").value.trim() || "Not recorded",
-        verification: byId("verification").value,
-        rural: byId("rural").value === "true",
-        notes: byId("notes").value.trim()
-    };
-    if (editId) {
-        alumni = alumni.map(a => a.id === editId ? item : a);
-        showToast("Alumni record updated.");
-    }
-    else {
-        alumni.push(item);
-        showToast("Alumni record added.");
-    }
-    saveAlumni();
-    byId("alumniDialog").close();
-    renderAll();
-}
-function openProfile(id) {
-    const a = alumni.find(x => x.id === id);
-    if (!a)
-        return;
-    const dialog = byId("profileDialog");
-    byId("profileContent").innerHTML = `<div class="dialog-header"><div><p class="eyebrow">Alumni profile</p><h3>${a.name}</h3></div><button class="icon-button" data-close-profile>×</button></div>
-    <div class="profile-grid">
-      ${profileItem("MD Batch", `MD ${a.batch}`)}${profileItem("Graduated", String(a.gradYear))}${profileItem("PLE", a.ple)}${profileItem("License", a.license)}
-      ${profileItem("Career", a.career)}${profileItem("Specialty", a.specialty)}${profileItem("Institution", a.institution)}${profileItem("Location", `${a.location}, ${a.region}`)}
-      ${profileItem("Verification", a.verification)}${profileItem("Rural / underserved service", a.rural ? "Yes" : "No / not recorded")}
-    </div><div class="profile-item" style="margin-top:12px"><span>Source / notes</span><strong>${a.notes || "None"}</strong></div>
-    <div class="dialog-actions"><button class="ghost-button" data-close-profile>Close</button><button class="primary-button" data-edit="${a.id}">Edit Record</button></div>`;
-    dialog.showModal();
-}
-function profileItem(label, value) { return `<div class="profile-item"><span>${label}</span><strong>${value}</strong></div>`; }
-function csvEscape(value) { const s = String(value ?? ""); return `"${s.replaceAll('"', '""')}"`; }
-function downloadCSV() {
-    const headers = ["Name", "MD Batch", "Year Graduated", "PLE", "License", "Career", "Specialty", "Institution", "Location", "Region", "Verification", "Rural Service", "Notes"];
-    const rows = alumni.map(a => [a.name, a.batch, a.gradYear, a.ple, a.license, a.career, a.specialty, a.institution, a.location, a.region, a.verification, a.rural ? "Yes" : "No", a.notes]);
-    const csv = [headers, ...rows].map(r => r.map(csvEscape).join(",")).join("\n");
-    downloadBlob(csv, "upm-shs-alumni-records.csv", "text/csv;charset=utf-8");
-}
-function downloadSummary() {
-    const headers = ["MD Batch", "Academic Year", "Admitted", "Completed", "Graduated", "Licensed", "Completion Rate", "Licensure Rate"];
-    const rows = cohorts.map(c => [c.batch, c.academicYear, c.admitted, c.completed, c.graduated, c.licensed, `${pct(c.completed, c.admitted)}%`, `${pct(c.licensed, c.graduated)}%`]);
-    const csv = [headers, ...rows].map(r => r.map(csvEscape).join(",")).join("\n");
-    downloadBlob(csv, "upm-shs-alumni-cohort-summary.csv", "text/csv;charset=utf-8");
-}
-function downloadBlob(content, filename, type) {
-    const blob = new Blob([content], { type });
+function downloadCsv() {
+    const rows = [["Name", "Batch", "Academic Year", "Graduation", "Stage", "Remarks"]];
+    people.forEach((person) => {
+        rows.push([
+            person.name,
+            `MD ${person.batch}`,
+            person.academicYear,
+            person.graduation,
+            person.stage,
+            person.remarks
+        ]);
+    });
+    const csv = rows
+        .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+        .join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "upm-shs-dom-alumni-registry.csv";
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
     URL.revokeObjectURL(url);
 }
-function handleRequests(target) {
-    const approve = target.closest("[data-approve]");
-    const reject = target.closest("[data-reject]");
-    if (approve) {
-        requests = requests.filter(r => r.id !== Number(approve.dataset.approve));
-        showToast("Update request approved (prototype). ");
-        renderRequests();
-        renderReports();
-    }
-    if (reject) {
-        requests = requests.filter(r => r.id !== Number(reject.dataset.reject));
-        showToast("Update request rejected (prototype). ");
-        renderRequests();
-        renderReports();
-    }
+function initEvents() {
+    navButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            var _a;
+            const targetView = (_a = button.dataset.view) !== null && _a !== void 0 ? _a : "dashboard";
+            showView(targetView);
+        });
+    });
+    [searchInput, batchFilter, stageFilter].forEach((element) => {
+        element.addEventListener("input", renderRegistry);
+        element.addEventListener("change", renderRegistry);
+    });
+    resetFiltersBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        batchFilter.value = "all";
+        stageFilter.value = "all";
+        renderRegistry();
+    });
+    downloadCsvBtn.addEventListener("click", downloadCsv);
 }
-function attachEvents() {
-    document.querySelectorAll(".nav-item").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.view)));
-    document.querySelectorAll("[data-view-jump]").forEach(btn => btn.addEventListener("click", () => setView(btn.dataset.viewJump)));
-    byId("menuButton").addEventListener("click", () => byId("sidebar").classList.toggle("open"));
-    byId("addAlumniBtn").addEventListener("click", () => openAlumniDialog());
-    byId("addAlumniBtn2").addEventListener("click", () => openAlumniDialog());
-    byId("exportBtn").addEventListener("click", downloadCSV);
-    byId("downloadReportBtn").addEventListener("click", downloadSummary);
-    byId("batchRangeSelect").addEventListener("change", renderBatchBars);
-    byId("searchInput").addEventListener("input", renderAlumniTable);
-    byId("batchFilter").addEventListener("change", renderAlumniTable);
-    byId("statusFilter").addEventListener("change", renderAlumniTable);
-    byId("clearFiltersBtn").addEventListener("click", () => { byId("searchInput").value = ""; byId("batchFilter").value = "all"; byId("statusFilter").value = "all"; renderAlumniTable(); });
-    byId("alumniForm").addEventListener("submit", saveForm);
-    byId("alumniTableBody").addEventListener("click", e => { const t = e.target; const b = t.closest("[data-profile]"); if (b)
-        openProfile(Number(b.dataset.profile)); });
-    byId("profileContent").addEventListener("click", e => { const t = e.target; if (t.closest("[data-close-profile]"))
-        byId("profileDialog").close(); const b = t.closest("[data-edit]"); if (b) {
-        const a = alumni.find(x => x.id === Number(b.dataset.edit));
-        byId("profileDialog").close();
-        if (a)
-            openAlumniDialog(a);
-    } });
-    byId("updateRequestList").addEventListener("click", e => handleRequests(e.target));
+function init() {
+    renderHeroMetrics();
+    renderStats();
+    renderStageChart();
+    renderEncodedList();
+    renderBatchProgress();
+    renderBatchCards();
+    populateBatchFilter();
+    renderRegistry();
+    initEvents();
 }
-attachEvents();
-renderAll();
+init();
