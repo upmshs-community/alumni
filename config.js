@@ -1,4 +1,4 @@
 window.ALUMNI_PORTAL_CONFIG = {
-  SUPABASE_URL: "YOUR_SUPABASE_PROJECT_URL",
-  SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_KEY"
+  SUPABASE_URL: "https://kafavdlqmmrftsrjqbst.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_v0FgtUKCB_CAWfZ6dzCH-g_BiNtDog_"
 };
